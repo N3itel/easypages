@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EASYPAGES by HUEZCORP — Páginas web a tu medida</title>
+<meta name="description" content="Diseñamos y publicamos la página web de tu negocio: restaurantes, consultorios, estudios, tiendas y mucho más. Elige un estilo, nosotros construimos el resto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F7F4EE;
+    --bg-alt:#EEE7D9;
+    --paper:#FFFEFB;
+    --ink:#1C231F;
+    --ink-soft:#5B645B;
+    --indigo:#22324B;
+    --indigo-deep:#16223A;
+    --gold:#A9823C;
+    --gold-soft:#D8BD86;
+    --line:#E1D9C5;
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:8px;
+    --shadow:0 22px 48px -26px rgba(20,26,22,.45);
+    --font-display:'Marcellus', serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; }
+  ul,ol{ margin:0; padding:0; list-style:none; }
+  h1,h2,h3,p{ margin:0; }
+  button{ font-family:inherit; cursor:pointer; background:none; border:none; color:inherit; }
+
+  :focus-visible{ outline:2px solid var(--gold); outline-offset:3px; border-radius:6px; }
+
+  .container{ width:100%; max-width:1180px; margin:0 auto; padding:0 28px; }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .eyebrow--center{ text-align:center; }
+
+  h2{
+    font-family:var(--font-display);
+    font-size:clamp(1.9rem, 3vw, 2.6rem);
+    font-weight:400;
+    color:var(--indigo);
+    margin-top:.5rem;
+    letter-spacing:-.01em;
+  }
+  .section-head{ max-width:640px; margin:0 auto 3rem; text-align:center; }
+  .section-head p.lead{ margin-top:1rem; color:var(--ink-soft); font-size:1.02rem; }
+
+  /* Buttons */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+    padding:.9rem 1.7rem; border-radius:999px;
+    font-weight:600; font-size:.94rem; text-decoration:none;
+    border:1px solid transparent; white-space:nowrap;
+    transition:transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .btn--primary{ background:var(--indigo); color:#fff; box-shadow:var(--shadow); }
+  .btn--primary:hover{ transform:translateY(-2px); background:var(--indigo-deep); }
+  .btn--ghost{ background:transparent; border-color:var(--line); color:var(--ink); }
+  .btn--ghost:hover{ border-color:var(--gold); color:var(--gold); }
+
+  /* Brand / logo */
+  .brand{ display:flex; align-items:center; gap:.65rem; text-decoration:none; }
+  .brand__mark{ width:40px; height:40px; flex-shrink:0; }
+  .brand__text{ display:flex; flex-direction:column; line-height:1.05; }
+  .brand__name{ font-family:var(--font-display); font-size:1.25rem; color:var(--indigo); letter-spacing:.01em; }
+  .brand__sub{
+    font-family:var(--font-mono); font-size:.58rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--ink-soft); margin-top:.18rem;
+  }
+
+  /* Nav */
+  .nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(247,244,238,.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav__inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; max-width:1180px; margin:0 auto;
+  }
+  .nav__links{ display:flex; gap:2.1rem; }
+  .nav__links a{
+    text-decoration:none; font-size:.94rem; font-weight:500; color:var(--ink);
+    position:relative; padding-bottom:4px;
+  }
+  .nav__links a:hover{ color:var(--indigo); }
+  .nav__cta{ margin-left:1.2rem; }
+  .nav__toggle{
+    display:none; flex-direction:column; justify-content:center; gap:5px;
+    width:34px; height:34px; margin-left:.6rem;
+  }
+  .nav__toggle span{ width:100%; height:2px; background:var(--ink); border-radius:2px; transition:transform .25s ease, opacity .25s ease; }
+  .nav__toggle.is-active span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .nav__toggle.is-active span:nth-child(2){ opacity:0; }
+  .nav__toggle.is-active span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+  /* Hero */
+  .hero{ position:relative; overflow:hidden; padding:88px 0 96px; }
+  .hero__contour{ position:absolute; inset:0; z-index:0; opacity:.5; pointer-events:none; }
+  .hero__inner{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:1.05fr .95fr; gap:64px; align-items:center;
+    max-width:1180px; margin:0 auto; padding:0 28px;
+  }
+  .hero h1{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(2.3rem, 4.1vw, 3.4rem);
+    color:var(--indigo); line-height:1.12; margin-top:.9rem; letter-spacing:-.01em;
+  }
+  .hero__lead{ margin-top:1.3rem; max-width:480px; color:var(--ink-soft); font-size:1.05rem; }
+  .hero__actions{ display:flex; gap:1rem; margin-top:2.1rem; flex-wrap:wrap; }
+  .hero__trust{ display:flex; flex-direction:column; gap:.55rem; margin-top:2.4rem; }
+  .hero__trust li{
+    font-size:.88rem; color:var(--ink-soft); padding-left:1.3rem; position:relative;
+  }
+  .hero__trust li::before{
+    content:''; position:absolute; left:0; top:.5em; width:7px; height:7px;
+    border-radius:50%; background:var(--gold);
+  }
+  .hero__visual{ position:relative; }
+
+  /* Mockup component (browser preview) */
+  .mockup{
+    --m-bg:#fff; --m-ink:#222; --m-accent:#333; --m-accent2:#999;
+    border-radius:var(--radius-lg);
+    background:var(--paper);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    transition:opacity .35s ease;
+  }
+  .mockup__bar{
+    display:flex; align-items:center; gap:8px;
+    padding:11px 16px; background:#EDEAE2; border-bottom:1px solid var(--line);
+  }
+  .mockup__dot{ width:8px; height:8px; border-radius:50%; background:#D5CFC0; }
+  .mockup__url{
+    margin-left:10px; font-family:var(--font-mono); font-size:.68rem; color:#8a8273;
+    background:#fff; padding:3px 10px; border-radius:6px; flex:1;
+  }
+  .mockup__screen{ background:var(--m-bg); padding:26px 24px 30px; transition:background .35s ease; }
+  .mockup__nav{ display:flex; align-items:center; gap:18px; margin-bottom:30px; }
+  .mockup__brandmark{ width:18px; height:18px; border-radius:4px; background:var(--m-accent); margin-right:auto; }
+  .mockup__navlink{
+    font-size:.7rem; color:var(--m-ink); opacity:.65; font-weight:500;
+  }
+  .mockup__hero{ display:flex; flex-direction:column; gap:9px; margin-bottom:28px; }
+  .mockup__eyebrow{
+    font-family:var(--font-mono); font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--m-accent);
+  }
+  .mockup__heading{
+    font-family:var(--font-display); font-size:1.35rem; color:var(--m-ink); line-height:1.2; max-width:80%;
+  }
+  .mockup__sub{ font-size:.78rem; color:var(--m-ink); opacity:.7; max-width:75%; }
+  .mockup__cta{
+    margin-top:6px; align-self:flex-start; font-size:.72rem; font-weight:600; color:#fff;
+    background:var(--m-accent); padding:8px 16px; border-radius:999px;
+  }
+  .mockup__grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .mockup__card{
+    height:46px; border-radius:8px; background:var(--m-accent2); opacity:.28;
+  }
+
+  /* Sectors */
+  .sectors{ padding:96px 0; background:var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .sectors__grid{
+    margin-top:3rem; display:grid; grid-template-columns:repeat(3, 1fr); gap:1.1rem;
+  }
+  .sector-chip{
+    display:flex; align-items:center; gap:14px;
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:18px 20px;
+  }
+  .sector-chip__icon{
+    width:42px; height:42px; flex-shrink:0; border-radius:50%;
+    background:var(--bg-alt); display:flex; align-items:center; justify-content:center;
+    color:var(--indigo);
+  }
+  .sector-chip__icon svg{ width:21px; height:21px; }
+  .sector-chip__text strong{ display:block; font-size:.94rem; font-weight:600; color:var(--ink); }
+  .sector-chip__text span{ font-size:.78rem; color:var(--ink-soft); }
+
+  /* Demo section */
+  .demo{ padding:104px 0; }
+  .demo__head{ max-width:680px; margin:0 auto; text-align:center; }
+  .demo__intro{ margin-top:1.1rem; color:var(--ink-soft); font-size:1.02rem; }
+  .demo__tabs{
+    display:flex; justify-content:center; gap:.6rem; margin:3rem 0 3rem; flex-wrap:wrap;
+  }
+  .demo__tab{
+    font-family:var(--font-mono); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase;
+    padding:.7rem 1.4rem; border-radius:999px; border:1px solid var(--line); color:var(--ink-soft);
+    transition:all .2s ease;
+  }
+  .demo__tab:hover{ border-color:var(--gold); color:var(--indigo); }
+  .demo__tab.is-active{ background:var(--indigo); border-color:var(--indigo); color:#fff; }
+  .demo__body{
+    display:grid; grid-template-columns:.85fr 1.15fr; gap:56px; align-items:start;
+  }
+  .demo__panel{ transition:opacity .25s ease; padding-top:.4rem; }
+  .demo__tagline{
+    font-family:var(--font-display); font-size:1.5rem; color:var(--indigo); line-height:1.3;
+  }
+  .demo__tags{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.2rem; }
+  .demo__tag{
+    font-size:.76rem; font-weight:600; color:var(--gold); border:1px solid var(--gold-soft);
+    background:rgba(169,130,60,.07); padding:.35rem .8rem; border-radius:999px;
+  }
+  .demo__desc{ margin-top:1.3rem; color:var(--ink-soft); font-size:.98rem; }
+  .demo__featTitle{
+    margin-top:1.8rem; font-family:var(--font-mono); font-size:.72rem; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--ink-soft);
+  }
+  .demo__features{ margin-top:.9rem; display:flex; flex-direction:column; gap:.65rem; }
+  .demo__features li{
+    font-size:.92rem; padding-left:1.5rem; position:relative; color:var(--ink);
+  }
+  .demo__features li::before{
+    content:''; position:absolute; left:0; top:.45em; width:9px; height:9px;
+    border:1.5px solid var(--gold); border-radius:2px; transform:rotate(45deg);
+  }
+  .demo__preview{ transition:opacity .25s ease; }
+
+  /* Process */
+  .process{ padding:104px 0; background:var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .process__list{
+    margin-top:3.4rem; display:grid; grid-template-columns:repeat(4,1fr); gap:1.6rem;
+  }
+  .process__list li{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:1.8rem 1.5rem; display:flex; flex-direction:column; gap:.7rem;
+  }
+  .process__num{ font-family:var(--font-mono); font-size:.85rem; color:var(--gold); font-weight:600; }
+  .process__list h3{ font-family:var(--font-display); font-size:1.15rem; color:var(--indigo); font-weight:400; }
+  .process__list p{ font-size:.88rem; color:var(--ink-soft); }
+
+  /* Plans */
+  .plans{ padding:104px 0; }
+  .plans__grid{
+    margin-top:3.4rem; display:grid; grid-template-columns:repeat(3,1fr); gap:1.6rem; align-items:stretch;
+  }
+  .plan-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:2.2rem 1.9rem; display:flex; flex-direction:column;
+  }
+  .plan-card--highlight{
+    border-color:var(--gold); box-shadow:var(--shadow); position:relative;
+  }
+  .plan-card__badge{
+    position:absolute; top:-13px; left:1.9rem; background:var(--gold); color:#fff;
+    font-family:var(--font-mono); font-size:.65rem; letter-spacing:.08em; text-transform:uppercase;
+    padding:.3rem .7rem; border-radius:999px;
+  }
+  .plan-card__name{ font-family:var(--font-display); font-size:1.3rem; color:var(--indigo); }
+  .plan-card__for{ font-size:.85rem; color:var(--ink-soft); margin-top:.4rem; }
+  .plan-card__price{ margin-top:1.4rem; font-family:var(--font-mono); font-size:1.6rem; color:var(--ink); font-weight:600; }
+  .plan-card__price span{ font-size:.78rem; color:var(--ink-soft); font-weight:500; }
+  .plan-card__list{ margin-top:1.5rem; display:flex; flex-direction:column; gap:.6rem; flex:1; }
+  .plan-card__list li{ font-size:.88rem; padding-left:1.3rem; position:relative; color:var(--ink); }
+  .plan-card__list li::before{
+    content:''; position:absolute; left:0; top:.5em; width:7px; height:7px; border-radius:50%; background:var(--gold);
+  }
+  .plan-card .btn{ margin-top:1.8rem; width:100%; }
+  .plans__note{ margin-top:2rem; text-align:center; font-size:.82rem; color:var(--ink-soft); }
+
+  /* CTA / footer */
+  .cta{ padding:0 0 80px; text-align:center; }
+  .divider-andina{ width:100%; height:34px; margin-bottom:64px; }
+  .cta h2{ margin-top:0; }
+  .cta p{ margin-top:1rem; max-width:480px; margin-inline:auto; color:var(--ink-soft); }
+  .cta__actions{ display:flex; justify-content:center; gap:1rem; margin-top:2.2rem; flex-wrap:wrap; }
+
+  .footer{ background:var(--indigo); color:#EDE7D8; padding:64px 0 36px; }
+  .footer .brand__name{ color:#fff; }
+  .footer .brand__sub{ color:#B9C2CE; }
+  .footer__inner{
+    display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:2rem;
+    padding-bottom:2.4rem; border-bottom:1px solid rgba(255,255,255,.14);
+  }
+  .footer__links{ display:flex; gap:2rem; flex-wrap:wrap; }
+  .footer__links a{ text-decoration:none; font-size:.9rem; color:#D8DEE6; }
+  .footer__links a:hover{ color:#fff; }
+  .footer__legal{
+    margin-top:1.6rem; font-size:.78rem; color:#9AA6B4; display:flex; justify-content:space-between; flex-wrap:wrap; gap:.5rem;
+  }
+
+  /* Responsive */
+  @media (max-width:920px){
+    .hero__inner{ grid-template-columns:1fr; }
+    .hero__visual{ order:-1; }
+    .sectors__grid{ grid-template-columns:repeat(2,1fr); }
+    .demo__body{ grid-template-columns:1fr; }
+    .demo__preview{ order:-1; }
+    .process__list{ grid-template-columns:repeat(2,1fr); }
+    .plans__grid{ grid-template-columns:1fr; max-width:420px; margin-inline:auto; }
+  }
+  @media (max-width:680px){
+    .nav__links, .nav__cta{
+      display:none;
+    }
+    .nav__links{
+      position:absolute; top:100%; left:0; right:0; background:var(--bg);
+      flex-direction:column; padding:1.4rem 28px; border-bottom:1px solid var(--line);
+      gap:1.1rem;
+    }
+    .nav__links.is-open{ display:flex; }
+    .nav__toggle{ display:flex; }
+    .sectors__grid{ grid-template-columns:1fr; }
+    .process__list{ grid-template-columns:1fr; }
+    .hero{ padding:56px 0 64px; }
+    .demo, .sectors, .process, .plans{ padding:64px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="#top">
+      <span class="brand__mark">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1.5" y="1.5" width="41" height="41" rx="11" fill="#22324B"/>
+          <path d="M11 31V27.5H15V24H19V20.5H23V17H27V13.5H31" stroke="#D8BD86" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="brand__text">
+        <span class="brand__name">EASYPAGES</span>
+        <span class="brand__sub">by Huezcorp</span>
+      </span>
+    </a>
+    <nav class="nav__links" id="navLinks">
+      <a href="#ambitos">Ámbitos</a>
+      <a href="#estilos">Estilos</a>
+      <a href="#proceso">Cómo funciona</a>
+      <a href="#planes">Planes</a>
+    </nav>
+    <a class="btn btn--primary nav__cta" href="#contacto">Cotiza tu página</a>
+    <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <svg class="hero__contour" viewBox="0 0 1180 560" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M-20 480 C 150 420, 260 540, 420 460 S 700 360, 880 440 1050 380, 1220 440" stroke="#A9823C" stroke-opacity="0.10" stroke-width="2" fill="none"/>
+      <path d="M-20 420 C 160 360, 270 480, 430 400 S 710 300, 890 380 1060 320, 1220 380" stroke="#A9823C" stroke-opacity="0.08" stroke-width="2" fill="none"/>
+      <path d="M-20 360 C 170 300, 280 420, 440 340 S 720 240, 900 320 1070 260, 1220 320" stroke="#22324B" stroke-opacity="0.07" stroke-width="2" fill="none"/>
+    </svg>
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow">Diseño web a medida · sin código · sin complicaciones</p>
+        <h1>Tu negocio en internet, sin tocar una sola línea de código.</h1>
+        <p class="hero__lead">En EASYPAGES diseñamos y publicamos la página de tu negocio — restaurantes, consultorios, estudios, tiendas y mucho más — para que tú sigas enfocado en lo tuyo. Eliges un estilo, nos cuentas tu rubro y nosotros construimos el resto.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#estilos">Ver estilos en venta</a>
+          <a class="btn btn--ghost" href="#contacto">Cotiza gratis</a>
+        </div>
+        <ul class="hero__trust">
+          <li>Cuatro identidades visuales listas para personalizar a tu marca</li>
+          <li>Páginas optimizadas para celular desde el primer día</li>
+          <li>Tu dominio, tus textos, tus fotos — tu negocio</li>
+        </ul>
+      </div>
+      <div class="hero__visual" id="heroMockupWrap">
+        <div class="mockup" id="heroMockup">
+          <div class="mockup__bar">
+            <span class="mockup__dot"></span><span class="mockup__dot"></span><span class="mockup__dot"></span>
+            <span class="mockup__url" data-url>tunegocio.pe</span>
+          </div>
+          <div class="mockup__screen">
+            <div class="mockup__nav">
+              <span class="mockup__brandmark"></span>
+              <span class="mockup__navlink"></span>
+              <span class="mockup__navlink"></span>
+              <span class="mockup__navlink"></span>
+            </div>
+            <div class="mockup__hero">
+              <span class="mockup__eyebrow" data-eyebrow></span>
+              <span class="mockup__heading" data-heading></span>
+              <span class="mockup__sub" data-sub></span>
+              <span class="mockup__cta" data-cta></span>
+            </div>
+            <div class="mockup__grid">
+              <span class="mockup__card"></span>
+              <span class="mockup__card"></span>
+              <span class="mockup__card"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTORES -->
+  <section class="sectors" id="ambitos">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow eyebrow--center">Para todos los rubros</p>
+        <h2>Un estilo a la medida de cada negocio</h2>
+        <p class="lead">No importa a qué te dediques: si tienes un negocio, tienes una historia que contar en internet.</p>
+      </div>
+      <div class="sectors__grid">
+
+        <div class="sector-chip">
+          <span class="sector-chip__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2v6a1.7 1.7 0 0 0 1.7 1.7h2.6A1.7 1.7 0 0 0 11 8V2M8 2v8M8 10v12"/></svg></span>
+          <span class="sector-chip__text"><strong>Restaurantes y cafés</strong><span>Cartas, reservas y delivery</span></span>
+        </div>
+
+        <div class="sector-chip">
+          <span class="sector-chip__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg></span>
+          <span class="sector-chip__text"><strong>Salud y bienestar</strong><span>Consultorios y citas online</span></span>
+        </div>
+
+        <div class="sector-chip">
+          <span class="sector-chip__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v15M5 8h4M15 8h4M5 8l-2 5a3 3 0 0 0 6 0l-2-5M19 8l-2 5a3 3 0 0 0 6 0l-2-5M9 21h6"/></svg></span>
+          <span class="sector-chip__text"><strong>Abogados y estudios</strong><span>Confianza y credenciales</span></span>
+        </div>
+
+        <div class="sector-chip">
+          <span class="sector-chip__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.5 5.5l4 4M14.5 14.5l4 4M18.5 5.5l-4 4M9.5 14.5l-4 4"/></svg></span>
+          <span class="sector-chip__text"><strong>Belleza y spa</strong><span>Citas y galería de servicios</span></span>
+        </div>
+
+        <div class="sector-chip">
+          <span class="sector-chip__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></span>
+          <span class="sector-chip__text"><strong>Inmobiliarias</strong><span>Portafolio de propiedades</span></span>
+        </div>
+
+        <div class="sector-chip">
+          <span class="sector-chip__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M7 6v12M17 6v12M20 9v6M7 12h10"/></svg></span>
+          <span class="sector-chip__text"><strong>Fitness y entrenadores</strong><span>Planes y reserva de horas</span></span>
+        </div>
+
+        <div class="sector-chip">
+          <span class="sector-chip__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 0 1 2-2h6v16H5a2 2 0 0 0-2 2V5zM21 5a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 1 2 2V5z"/></svg></span>
+          <span class="sector-chip__text"><strong>Educación y academias</strong><span>Cursos e inscripciones</span></span>
+        </div>
+
+        <div class="sector-chip">
+          <span class="sector-chip__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21L12 3l9 18H3zM7.5 14h9M9 17.5h6"/></svg></span>
+          <span class="sector-chip__text"><strong>Construcción y arquitectura</strong><span>Proyectos y cotizaciones</span></span>
+        </div>
+
+        <div class="sector-chip">
+          <span class="sector-chip__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8zM9 8V6a3 3 0 0 1 6 0v2"/></svg></span>
+          <span class="sector-chip__text"><strong>Tiendas online</strong><span>Catálogo, carrito y pagos</span></span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMOS DE ESTILOS -->
+  <section class="demo" id="estilos">
+    <div class="container">
+      <div class="demo__head">
+        <p class="eyebrow">Estilos en venta</p>
+        <h2>Elige el estilo que va con tu negocio</h2>
+        <p class="demo__intro">Cada estilo es un punto de partida: ajustamos colores, textos y secciones a tu marca. Así se ve cada uno por dentro — toca una pestaña para explorar.</p>
+      </div>
+
+      <div class="demo__tabs" role="tablist" aria-label="Estilos disponibles">
+        <button class="demo__tab is-active" data-style="costa" role="tab" aria-selected="true">Costa</button>
+        <button class="demo__tab" data-style="andina" role="tab" aria-selected="false">Andina</button>
+        <button class="demo__tab" data-style="selva" role="tab" aria-selected="false">Selva</button>
+        <button class="demo__tab" data-style="lima" role="tab" aria-selected="false">Lima</button>
+      </div>
+
+      <div class="demo__body">
+        <div class="demo__panel" id="demoPanel">
+          <p class="demo__tagline" id="demoTagline"></p>
+          <div class="demo__tags" id="demoTags"></div>
+          <p class="demo__desc" id="demoDesc"></p>
+          <p class="demo__featTitle">Funcionalidades incluidas</p>
+          <ul class="demo__features" id="demoFeatures"></ul>
+        </div>
+
+        <div class="demo__preview" id="demoPreviewWrap">
+          <div class="mockup" id="demoMockup">
+            <div class="mockup__bar">
+              <span class="mockup__dot"></span><span class="mockup__dot"></span><span class="mockup__dot"></span>
+              <span class="mockup__url" data-url>tunegocio.pe</span>
+            </div>
+            <div class="mockup__screen">
+              <div class="mockup__nav">
+                <span class="mockup__brandmark"></span>
+                <span class="mockup__navlink"></span>
+                <span class="mockup__navlink"></span>
+                <span class="mockup__navlink"></span>
+              </div>
+              <div class="mockup__hero">
+                <span class="mockup__eyebrow" data-eyebrow></span>
+                <span class="mockup__heading" data-heading></span>
+                <span class="mockup__sub" data-sub></span>
+                <span class="mockup__cta" data-cta></span>
+              </div>
+              <div class="mockup__grid">
+                <span class="mockup__card"></span>
+                <span class="mockup__card"></span>
+                <span class="mockup__card"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="process" id="proceso">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow eyebrow--center">Cómo funciona</p>
+        <h2>De la idea a tu página, en cuatro pasos</h2>
+      </div>
+      <ol class="process__list">
+        <li>
+          <span class="process__num">01</span>
+          <h3>Cuéntanos tu rubro</h3>
+          <p>Nos compartes a qué se dedica tu negocio y qué quieres mostrar primero.</p>
+        </li>
+        <li>
+          <span class="process__num">02</span>
+          <h3>Elige un estilo</h3>
+          <p>Seleccionas Costa, Andina, Selva o Lima — o partimos de cero si prefieres algo distinto.</p>
+        </li>
+        <li>
+          <span class="process__num">03</span>
+          <h3>Lo armamos por ti</h3>
+          <p>Escribimos, diseñamos y ajustamos cada sección contigo, sin tecnicismos.</p>
+        </li>
+        <li>
+          <span class="process__num">04</span>
+          <h3>Publicamos tu página</h3>
+          <p>Tu negocio queda en línea, con dominio propio y listo para recibir clientes.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- PLANES -->
+  <section class="plans" id="planes">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow eyebrow--center">Planes</p>
+        <h2>Un plan para cada etapa de tu negocio</h2>
+      </div>
+      <div class="plans__grid">
+
+        <div class="plan-card">
+          <p class="plan-card__name">Esencial</p>
+          <p class="plan-card__for">Para presentarte en internet</p>
+          <p class="plan-card__price">S/ 590 <span>desde</span></p>
+          <ul class="plan-card__list">
+            <li>Una página con secciones esenciales</li>
+            <li>Formulario de contacto</li>
+            <li>Diseño responsivo para celular</li>
+            <li>Dominio y correo el primer año</li>
+          </ul>
+          <a class="btn btn--ghost" href="#contacto">Elegir Esencial</a>
+        </div>
+
+        <div class="plan-card plan-card--highlight">
+          <span class="plan-card__badge">Más elegido</span>
+          <p class="plan-card__name">Profesional</p>
+          <p class="plan-card__for">Para convertir visitas en clientes</p>
+          <p class="plan-card__price">S/ 990 <span>desde</span></p>
+          <ul class="plan-card__list">
+            <li>Hasta 5 secciones personalizadas</li>
+            <li>Reservas o agenda de citas en línea</li>
+            <li>Integración con WhatsApp y redes</li>
+            <li>Optimización básica para buscadores</li>
+          </ul>
+          <a class="btn btn--primary" href="#contacto">Elegir Profesional</a>
+        </div>
+
+        <div class="plan-card">
+          <p class="plan-card__name">Tienda online</p>
+          <p class="plan-card__for">Para vender sin depender de redes</p>
+          <p class="plan-card__price">S/ 1,490 <span>desde</span></p>
+          <ul class="plan-card__list">
+            <li>Catálogo de productos ilimitado</li>
+            <li>Carrito de compras y pago en línea</li>
+            <li>Panel para gestionar pedidos</li>
+            <li>Acompañamiento el primer mes</li>
+          </ul>
+          <a class="btn btn--ghost" href="#contacto">Elegir Tienda online</a>
+        </div>
+
+      </div>
+      <p class="plans__note">* Precios referenciales en soles — el costo final depende del alcance de tu proyecto.</p>
+    </div>
+  </section>
+
+  <!-- CTA / CONTACTO -->
+  <section class="cta" id="contacto">
+    <div class="container">
+      <svg class="divider-andina" viewBox="0 0 1180 34" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 24 L60 24 L60 14 L120 14 L120 24 L180 24 L180 10 L240 10 L240 24 L300 24 L300 14 L360 14 L360 24 L420 24 L420 10 L480 10 L480 24 L540 24 L540 14 L600 14 L600 24 L660 24 L660 10 L720 10 L720 24 L780 24 L780 14 L840 14 L840 24 L900 24 L900 10 L960 10 L960 24 L1020 24 L1020 14 L1080 14 L1080 24 L1180 24" fill="none" stroke="#A9823C" stroke-opacity="0.4" stroke-width="1.5"/>
+      </svg>
+      <h2>¿Listo para tener tu página esta semana?</h2>
+      <p>Escríbenos y te enviamos una propuesta con el estilo que mejor le queda a tu negocio.</p>
+      <div class="cta__actions">
+        <a class="btn btn--primary" href="https://wa.me/51999999999" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+        <a class="btn btn--ghost" href="mailto:hola@easypages.pe">hola@easypages.pe</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <a class="brand" href="#top">
+        <span class="brand__mark">
+          <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1.5" y="1.5" width="41" height="41" rx="11" fill="#0F1A2B"/>
+            <path d="M11 31V27.5H15V24H19V20.5H23V17H27V13.5H31" stroke="#D8BD86" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand__text">
+          <span class="brand__name">EASYPAGES</span>
+          <span class="brand__sub">by Huezcorp</span>
+        </span>
+      </a>
+      <nav class="footer__links">
+        <a href="#ambitos">Ámbitos</a>
+        <a href="#estilos">Estilos</a>
+        <a href="#proceso">Cómo funciona</a>
+        <a href="#planes">Planes</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+    </div>
+    <p class="footer__legal">
+      <span>© 2026 EASYPAGES by Huezcorp. Diseño y desarrollo de páginas web.</span>
+      <span>Hecho en Perú</span>
+    </p>
+  </div>
+</footer>
+
+<script>
+  // ---- Datos de cada estilo en venta ----
+  const STYLES = {
+    costa: {
+      tagline: 'Minimalismo costero para marcas que venden rápido.',
+      tags: ['Ecommerce', 'Belleza y spa', 'Fitness'],
+      desc: 'Líneas limpias, mucho espacio en blanco y acentos en celeste. Pensado para catálogos de producto, reservas de citas y conversión rápida desde el celular.',
+      features: [
+        'Catálogo de productos con filtros',
+        'Carrito de compras y pago en línea',
+        'Reserva de citas y horarios',
+        'Ficha de producto con galería de fotos',
+        'Botón directo a WhatsApp',
+        'Diseño optimizado para celular'
+      ],
+      mock: { url:'tutienda.pe', nav:['Tienda','Nosotros','Contacto'], eyebrow:'NUEVA COLECCIÓN', heading:'Encuentra tu próximo favorito', sub:'Envíos a todo el Perú · Pago seguro en línea', cta:'Comprar ahora' },
+      colors: { bg:'#F3F8F9', ink:'#15313A', accent:'#2E7C8C', accent2:'#E2785A' }
+    },
+    andina: {
+      tagline: 'Calidez artesanal para negocios con historia.',
+      tags: ['Restaurantes y cafés', 'Tiendas artesanales', 'Estudios profesionales'],
+      desc: 'Tonos tierra, tipografía con carácter y secciones pensadas para contar tu historia. Ideal para cartas digitales, menús y presentaciones de servicios.',
+      features: [
+        'Carta o menú digital editable',
+        'Sistema de reservas de mesa',
+        'Galería de platos o productos',
+        'Formulario de contacto y cotización',
+        'Mapa de ubicación integrado',
+        'Testimonios de clientes'
+      ],
+      mock: { url:'turestaurante.pe', nav:['Carta','Reservas','Nosotros'], eyebrow:'DESDE 1998', heading:'Sabores que se quedan contigo', sub:'Cocina de autor en el corazón de la ciudad', cta:'Reservar mesa' },
+      colors: { bg:'#FAF2E5', ink:'#3B2417', accent:'#B5562F', accent2:'#AD8A3D' }
+    },
+    selva: {
+      tagline: 'Identidad orgánica para marcas que cuidan personas.',
+      tags: ['Salud y bienestar', 'Educación', 'ONG y fundaciones'],
+      desc: 'Verdes profundos, formas suaves y mucha claridad en la información. Pensado para que agendar una cita o inscribirse a un curso tome segundos.',
+      features: [
+        'Agenda de citas en línea',
+        'Formulario de inscripción',
+        'Sección de servicios o cursos',
+        'Blog o sección de noticias',
+        'Integración con WhatsApp y redes sociales',
+        'Versión en español e inglés'
+      ],
+      mock: { url:'tuconsultorio.pe', nav:['Servicios','Equipo','Contacto'], eyebrow:'BIENESTAR INTEGRAL', heading:'Cuidamos de ti, paso a paso', sub:'Citas presenciales y en línea', cta:'Agendar cita' },
+      colors: { bg:'#EFF5EE', ink:'#1F3324', accent:'#2F5233', accent2:'#7C9A6A' }
+    },
+    lima: {
+      tagline: 'Sobriedad institucional para quienes inspiran confianza.',
+      tags: ['Abogados', 'Inmobiliarias', 'Arquitectura y construcción'],
+      desc: 'Azul profundo, tipografía firme y estructura clara. Pensado para mostrar proyectos, casos y credenciales con seriedad.',
+      features: [
+        'Portafolio de proyectos o casos',
+        'Formulario de consulta confidencial',
+        'Mapa y datos de contacto',
+        'Sección de equipo y credenciales',
+        'Descarga de brochure en PDF',
+        'Sello de certificaciones y alianzas'
+      ],
+      mock: { url:'tuestudio.pe', nav:['Servicios','Casos','Contacto'], eyebrow:'ESTUDIO JURÍDICO', heading:'Asesoría clara, resultados firmes', sub:'Más de 12 años protegiendo tus intereses', cta:'Agendar consulta' },
+      colors: { bg:'#EEF1F5', ink:'#1B2433', accent:'#213552', accent2:'#AD8A3D' }
+    }
+  };
+  const STYLE_ORDER = ['costa','andina','selva','lima'];
+
+  function paintMockup(mockEl, key){
+    const s = STYLES[key];
+    mockEl.style.setProperty('--m-bg', s.colors.bg);
+    mockEl.style.setProperty('--m-ink', s.colors.ink);
+    mockEl.style.setProperty('--m-accent', s.colors.accent);
+    mockEl.style.setProperty('--m-accent2', s.colors.accent2);
+    mockEl.querySelector('[data-url]').textContent = s.mock.url;
+    const links = mockEl.querySelectorAll('.mockup__navlink');
+    s.mock.nav.forEach((t,i)=>{ if(links[i]) links[i].textContent = t; });
+    mockEl.querySelector('[data-eyebrow]').textContent = s.mock.eyebrow;
+    mockEl.querySelector('[data-heading]').textContent = s.mock.heading;
+    mockEl.querySelector('[data-sub]').textContent = s.mock.sub;
+    mockEl.querySelector('[data-cta]').textContent = s.mock.cta;
+  }
+
+  function paintDemoPanel(key){
+    const s = STYLES[key];
+    document.getElementById('demoTagline').textContent = s.tagline;
+    document.getElementById('demoDesc').textContent = s.desc;
+
+    const tagsWrap = document.getElementById('demoTags');
+    tagsWrap.innerHTML = '';
+    s.tags.forEach(tag=>{
+      const span = document.createElement('span');
+      span.className = 'demo__tag';
+      span.textContent = tag;
+      tagsWrap.appendChild(span);
+    });
+
+    const featList = document.getElementById('demoFeatures');
+    featList.innerHTML = '';
+    s.features.forEach(f=>{
+      const li = document.createElement('li');
+      li.textContent = f;
+      featList.appendChild(li);
+    });
+
+    paintMockup(document.getElementById('demoMockup'), key);
+  }
+
+  function switchDemo(key){
+    const panel = document.getElementById('demoPanel');
+    const preview = document.getElementById('demoPreviewWrap');
+    panel.style.opacity = 0;
+    preview.style.opacity = 0;
+    setTimeout(()=>{
+      paintDemoPanel(key);
+      panel.style.opacity = 1;
+      preview.style.opacity = 1;
+    }, 160);
+  }
+
+  const tabs = document.querySelectorAll('.demo__tab');
+  tabs.forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      tabs.forEach(t=>{ t.classList.remove('is-active'); t.setAttribute('aria-selected','false'); });
+      tab.classList.add('is-active');
+      tab.setAttribute('aria-selected','true');
+      switchDemo(tab.dataset.style);
+    });
+  });
+
+  paintDemoPanel('costa');
+
+  // ---- Mockup del hero: rotación automática ----
+  const heroMock = document.getElementById('heroMockup');
+  const heroWrap = document.getElementById('heroMockupWrap');
+  let heroIndex = 0;
+  paintMockup(heroMock, STYLE_ORDER[0]);
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let heroTimer = null;
+
+  function rotateHero(){
+    heroMock.style.opacity = 0;
+    setTimeout(()=>{
+      heroIndex = (heroIndex + 1) % STYLE_ORDER.length;
+      paintMockup(heroMock, STYLE_ORDER[heroIndex]);
+      heroMock.style.opacity = 1;
+    }, 320);
+  }
+
+  if(!reduceMotion){
+    heroTimer = setInterval(rotateHero, 4200);
+    heroWrap.addEventListener('mouseenter', ()=> clearInterval(heroTimer));
+    heroWrap.addEventListener('mouseleave', ()=> { heroTimer = setInterval(rotateHero, 4200); });
+  }
+
+  // ---- Menú móvil ----
+  const navToggle = document.getElementById('navToggle');
+  const navLinksEl = document.getElementById('navLinks');
+  navToggle.addEventListener('click', ()=>{
+    const isOpen = navLinksEl.classList.toggle('is-open');
+    navToggle.classList.toggle('is-active');
+    navToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+  navLinksEl.querySelectorAll('a').forEach(link=>{
+    link.addEventListener('click', ()=>{
+      navLinksEl.classList.remove('is-open');
+      navToggle.classList.remove('is-active');
+      navToggle.setAttribute('aria-expanded','false');
+    });
+  });
+</script>
+</body>
+</html>
