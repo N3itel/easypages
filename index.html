@@ -82,9 +82,15 @@
          (que era lo que dejaba "cuadrados" cuando la fuente no cargaba). -->
     
     <style>
+        html {
+            overflow-x: hidden;
+        }
         body {
             font-family: 'Inter', sans-serif;
             transition: background-color 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
+            max-width: 100%;
+            position: relative;
         }
 
         /* Apple Scrolling Reveal Animation */
