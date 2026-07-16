@@ -336,6 +336,12 @@
 
         /* ===== Header, footer y fondo animado de cada demo (parece un sitio real) ===== */
         .dm-demo{position:relative}
+        .dm-announce{position:relative;z-index:6;display:flex;align-items:center;justify-content:center;gap:.5rem;
+            padding:.5rem 2rem .5rem 1rem;margin:-.25rem -.25rem .1rem;border-radius:.7rem;
+            background:var(--acc);color:#fff;font-size:.72rem;font-weight:700;text-align:center;line-height:1.3}
+        .dm-announce-x{position:absolute;right:.6rem;top:50%;transform:translateY(-50%);background:transparent;border:0;
+            color:#fff;font-size:1.1rem;cursor:pointer;opacity:.85;line-height:1;padding:0 .2rem}
+        .dm-announce-x:hover{opacity:1}
         .dm-page{position:relative;z-index:1;display:flex;flex-direction:column;gap:1.1rem;padding:0 .25rem}
         /* Header sticky con navegación */
         .dm-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:.75rem;
@@ -354,6 +360,13 @@
             padding:.4rem .85rem;cursor:pointer;white-space:nowrap;transition:filter .2s,transform .12s}
         .dm-header-cta:hover{filter:brightness(1.1)}
         .dm-header-cta:active{transform:scale(0.95)}
+        .dm-cart-badge{position:relative;background:var(--dmc2);border:1px solid var(--dmb);border-radius:999px;
+            padding:.4rem .7rem;font-size:.85rem;cursor:pointer;transition:transform .12s,border-color .2s;line-height:1}
+        .dm-cart-badge:hover{border-color:var(--acc)}
+        .dm-cart-badge:active{transform:scale(0.92)}
+        .dm-cart-count{position:absolute;top:-6px;right:-6px;background:var(--acc);color:#fff;font-size:9px;font-weight:800;
+            min-width:16px;height:16px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;padding:0 3px;
+            animation:dmCheckPop .35s cubic-bezier(0.16,0.84,0.44,1)}
         @container dm (max-width:640px){ .dm-nav{display:none} }
         /* Footer */
         .dm-footer{position:relative;z-index:1;margin-top:1.5rem;padding:1.3rem 1rem 1rem;border-top:1px solid var(--dmb);
@@ -377,7 +390,23 @@
         .dm-orb-3{width:220px;height:220px;top:40%;left:55%;opacity:.1;animation:dmOrbA 26s ease-in-out infinite reverse}
         @keyframes dmOrbA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,30px) scale(1.12)}66%{transform:translate(-30px,20px) scale(0.94)}}
         @keyframes dmOrbB{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,-30px) scale(1.15)}}
+
+        /* Bloques de contenido de las secciones (Inicio, Nosotros, Contacto) */
+        .dm-hero{text-align:center;padding:1.5rem 1rem 1.2rem;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+        .dm-hero-title{font-size:1.5rem;font-weight:900;line-height:1.15;color:var(--dmtx);max-width:520px;letter-spacing:-.01em}
+        .dm-hero-sub{font-size:.85rem;color:var(--dmmut);max-width:440px;line-height:1.6}
+        .dm-cta-band{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+            padding:1rem 1.2rem;border-radius:1rem;margin-top:.5rem;
+            background:color-mix(in srgb, var(--acc) 12%, var(--dmc));border:1px solid color-mix(in srgb, var(--acc) 30%, var(--dmb));
+            font-weight:700;color:var(--dmtx);font-size:.85rem}
+        .dm-map{margin-top:.3rem;height:90px;border-radius:.7rem;display:flex;align-items:center;justify-content:center;
+            gap:.4rem;font-size:.78rem;color:var(--dmmut);cursor:pointer;
+            background:repeating-linear-gradient(45deg,var(--dmc2),var(--dmc2) 10px,color-mix(in srgb,var(--acc) 6%,var(--dmc2)) 10px,color-mix(in srgb,var(--acc) 6%,var(--dmc2)) 20px);
+            border:1px solid var(--dmb)}
+        .dm-map:hover{border-color:var(--acc)}
+        @container dm (max-width:520px){ .dm-hero-title{font-size:1.25rem} }
         .dm-price{color:var(--acc);font-weight:900}
+        .dm-stock-low{font-size:.68rem;font-weight:700;color:#ef4444}
         .dm-qty{display:flex;align-items:center;gap:.45rem}
         #sandbox-render .dm-qty button{width:26px;height:26px;min-height:26px;border-radius:.45rem;border:1px solid var(--dmb);background:var(--dmc2);color:var(--dmtx);cursor:pointer;font-weight:800;line-height:1}
         .dm-sum{display:flex;justify-content:space-between;gap:.75rem;font-size:12px;color:var(--dmmut);padding:.35rem 0}
@@ -1592,37 +1621,21 @@
             inmobiliaria: () => inmReset(), belleza: () => spaReset()
         };
 
+        const DEMO_TITLES = {
+            restaurante: "Pachamanca & Grill - Restaurante", ecommerce: "Inka Boutique - E-commerce",
+            negocios: "Andes Logistics - Empresa", profesionales: "Estudio Qori - Profesional",
+            salud: "Clínica Vida Andina - Salud", fitness: "Power Andino Gym - Fitness",
+            inmobiliaria: "Urbana Propiedades - Inmobiliaria", belleza: "Killa Beauty Spa - Belleza"
+        };
+
         function openDemo(type) {
             activeSandboxType = type;
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Lock background scrolling
             if (DEMO_RESET[type]) DEMO_RESET[type]();  // cada demo arranca desde el paso 1
-            
-            if (type === 'restaurante') {
-                modalTitle.innerText = "Pachamanca & Grill - Restaurante";
-                renderRestauranteDemo();
-            } else if (type === 'ecommerce') {
-                modalTitle.innerText = "Inca Boutique - E-commerce";
-                renderEcommerceDemo();
-            } else if (type === 'negocios') {
-                modalTitle.innerText = "Chaski Logística - Empresa";
-                renderNegociosDemo();
-            } else if (type === 'profesionales') {
-                modalTitle.innerText = "Valeria Roca Studio - Profesional";
-                renderProfesionalesDemo();
-            } else if (type === 'salud') {
-                modalTitle.innerText = "Clínica Vida Andina - Salud";
-                renderSaludDemo();
-            } else if (type === 'fitness') {
-                modalTitle.innerText = "Apu Fit Center - Fitness";
-                renderFitnessDemo();
-            } else if (type === 'inmobiliaria') {
-                modalTitle.innerText = "Marka Propiedades - Inmobiliaria";
-                renderInmobiliariaDemo();
-            } else if (type === 'belleza') {
-                modalTitle.innerText = "Killa Beauty Spa - Belleza";
-                renderBellezaDemo();
-            }
+            modalTitle.innerText = DEMO_TITLES[type] || '';
+            demoSection[type] = 0;
+            DEMO_SECTION_RENDER[type](0);  // arranca en la sección "Inicio"
         }
 
         function closeDemo() {
@@ -1800,6 +1813,164 @@
             'Selecciona al menos un servicio':'Seleziona almeno un servizio','Elige un servicio':'Scegli un servizio',
             'Agrega al menos un plato a tu pedido':'Aggiungi almeno un piatto all\u2019ordine',
             'Cupón no válido (prueba INKA10)':'Coupon non valido (prova INKA10)','Cupón aplicado: 10% de descuento':'Coupon applicato: 10% di sconto',
+            '¡Solo quedan':'Ne restano solo',
+            'Ver producto':'Vedi prodotto',
+            '🔥 2x1 en pisco sours de lunes a jueves':'🔥 2x1 sui pisco sour dal lunedì al giovedì',
+            '🚚 Envío gratis en compras desde $200 · Cambios gratis 30 días':'🚚 Spedizione gratis da 200€ · Cambi gratis 30 giorni',
+            '📦 Cotiza tu envío internacional y recibe 10% en tu primer despacho':'📦 Preventiva la tua spedizione e ricevi il 10% sul primo invio',
+            '📐 Agenda una consulta de diseño sin costo este mes':'📐 Prenota una consulenza di design gratuita questo mese',
+            '🩺 Chequeo preventivo con 20% de descuento hasta fin de mes':'🩺 Check-up preventivo con 20% di sconto fino a fine mese',
+            '💪 Inscríbete hoy y llévate 1 mes de nutrición gratis':'💪 Iscriviti oggi e ricevi 1 mese di nutrizione gratis',
+            '🏡 Feria inmobiliaria: cuota inicial desde 10% esta semana':'🏡 Fiera immobiliare: anticipo dal 10% questa settimana',
+            '💅 Reserva 2 servicios y el tercero va con 30% off':'💅 Prenota 2 servizi e il terzo è al 30% di sconto',
+            'Lo que dicen nuestros clientes':'Cosa dicono i nostri clienti',
+            'Por qué elegirnos':'Perché sceglierci',
+            'Hablemos':'Parliamone',
+            'Escríbenos y te respondemos el mismo día.':'Scrivici e ti rispondiamo in giornata.',
+            'Mensaje':'Messaggio',
+            '¿En qué te ayudamos?':'Come possiamo aiutarti?',
+            'Enviar mensaje':'Invia messaggio',
+            '¡Mensaje enviado! (demo)':'Messaggio inviato! (demo)',
+            'Dirección':'Indirizzo',
+            'Lunes a sábado':'Dal lunedì al sabato',
+            'Ver en el mapa':'Vedi sulla mappa',
+            'Ver la carta y reservar':'Vedi il menù e prenota',
+            'Cocina peruana con alma de brasa':'Cucina peruviana alla brace',
+            'Ingredientes frescos del mercado, recetas de la casa y el mejor pisco sour de Miraflores.':'Ingredienti freschi di mercato, ricette della casa e il miglior pisco sour di Miraflores.',
+            'años':'anni',
+            'en Google':'su Google',
+            'comensales':'clienti',
+            'La experiencia Pachamanca':'L’esperienza Pachamanca',
+            'Cocina a la brasa':'Cucina alla brace',
+            'Carnes y verduras cocidas bajo tierra, al estilo ancestral.':'Carni e verdure cotte sottoterra, allo stile ancestrale.',
+            'Insumos frescos':'Ingredienti freschi',
+            'Compramos cada mañana en el mercado de Surquillo.':'Compriamo ogni mattina al mercato.',
+            'Barra de autor':'Bar d’autore',
+            'Pisco sours, chilcanos y macerados de la casa.':'Pisco sour, chilcano e macerati della casa.',
+            'La mejor pachamanca que he probado en Lima. Ambiente increíble.':'La miglior pachamanca mai provata. Ambiente incredibile.',
+            'Reservé online en 1 minuto y la mesa estaba lista. Volveré.':'Ho prenotato online in 1 minuto, tavolo pronto. Tornerò.',
+            '¿Con hambre? Arma tu pedido o reserva tu mesa.':'Hai fame? Componi il tuo ordine o prenota un tavolo.',
+            'Ir a la tienda':'Vai al negozio',
+            'Alpaca peruana, tejida a mano':'Alpaca peruviana, fatta a mano',
+            'Prendas premium de baby alpaca. Envíos a todo el Perú en 48h y cambios gratis.':'Capi premium in baby alpaca. Spedizioni in 48h e cambi gratis.',
+            'baby alpaca':'baby alpaca',
+            'envío':'spedizione',
+            'clientes':'clienti',
+            'Por qué Inka Boutique':'Perché Inka Boutique',
+            'Hecho a mano':'Fatto a mano',
+            'Cada prenda tejida por artesanas cusqueñas.':'Ogni capo tessuto da artigiane cusqueñe.',
+            'Envío rápido':'Spedizione rapida',
+            'A todo el Perú en 48h, gratis desde $200.':'In tutto il paese in 48h, gratis da 200€.',
+            'Cambios gratis':'Cambi gratis',
+            '30 días para cambios y devoluciones.':'30 giorni per cambi e resi.',
+            'La chompa es abrigadora y suavísima. Calidad real.':'Il maglione è caldo e morbidissimo. Qualità vera.',
+            'Llegó al día siguiente y el empaque es hermoso.':'Arrivato il giorno dopo, packaging bellissimo.',
+            'Descubre la colección de esta temporada.':'Scopri la collezione di stagione.',
+            'Novedades de temporada':'Novità di stagione',
+            'Nuevas prendas tejidas a mano, edición limitada.':'Nuovi capi fatti a mano, edizione limitata.',
+            'Lo nuevo':'Le novità',
+            'Aprovecha descuentos por tiempo limitado en prendas seleccionadas.':'Approfitta degli sconti a tempo su capi selezionati.',
+            'Cotizar mi envío':'Preventivo spedizione',
+            'Tu carga, conectada al mundo':'Il tuo carico, connesso al mondo',
+            'Logística aérea, marítima y terrestre. Del Perú a cualquier economía del planeta.':'Logistica aerea, marittima e terrestre. Verso ogni economia del pianeta.',
+            'a tiempo':'puntuale',
+            'monitoreo':'monitoraggio',
+            'países':'paesi',
+            'Nuestros servicios':'I nostri servizi',
+            'Carga aérea':'Carico aereo',
+            'Entregas urgentes en 3–5 días hábiles.':'Consegne urgenti in 3–5 giorni.',
+            'Carga marítima':'Carico marittimo',
+            'Grandes volúmenes al mejor costo por kilo.':'Grandi volumi al miglior costo al kg.',
+            'Última milla':'Ultimo miglio',
+            'Distribución nacional puerta a puerta.':'Distribuzione nazionale porta a porta.',
+            'Manejan nuestra exportación hace 3 años. Impecables.':'Gestiscono il nostro export da 3 anni. Impeccabili.',
+            'El cotizador online nos ahorra horas cada semana.':'Il preventivo online ci fa risparmiare ore.',
+            'Calcula el costo de tu próximo envío en segundos.':'Calcola il costo della tua spedizione in pochi secondi.',
+            'Cobertura global':'Copertura globale',
+            'Operamos rutas a más de 40 países en los cinco continentes.':'Operiamo rotte in oltre 40 paesi nei cinque continenti.',
+            'Solicitar una propuesta':'Richiedi una proposta',
+            'Arquitectura que respira su entorno':'Architettura che respira il suo contesto',
+            'Diseñamos espacios que unen la tradición andina con líneas contemporáneas.':'Progettiamo spazi che uniscono tradizione andina e linee contemporanee.',
+            'proyectos':'progetti',
+            'premios':'premi',
+            'Cómo trabajamos':'Come lavoriamo',
+            'Diseño a medida':'Design su misura',
+            'Cada proyecto nace de tu terreno y tu historia.':'Ogni progetto nasce dal tuo terreno e dalla tua storia.',
+            'Sustentable':'Sostenibile',
+            'Materiales locales y eficiencia energética.':'Materiali locali ed efficienza energetica.',
+            'Obra llave en mano':'Chiavi in mano',
+            'Del boceto a la entrega, un solo equipo.':'Dal bozzetto alla consegna, un solo team.',
+            'Entendieron exactamente lo que soñábamos para la casa.':'Hanno capito esattamente ciò che sognavamo.',
+            'Profesionalismo y detalle en cada plano.':'Professionalità e dettaglio in ogni disegno.',
+            '¿Tienes un proyecto en mente? Cuéntanoslo.':'Hai un progetto in mente? Raccontacelo.',
+            'Diseño arquitectónico, interiorismo y obra llave en mano.':'Progettazione, interior design e chiavi in mano.',
+            'Reservar una cita':'Prenota una visita',
+            'Tu salud, en las mejores manos':'La tua salute, in ottime mani',
+            'Atención médica de calidad, con especialistas y tecnología de punta. 24/7.':'Assistenza medica di qualità, con specialisti e tecnologia avanzata. 24/7.',
+            'atención':'assistenza',
+            'especialistas':'specialisti',
+            'pacientes':'pazienti',
+            'Nuestras especialidades':'Le nostre specialità',
+            'Medicina general':'Medicina generale',
+            'Consultas y chequeos preventivos.':'Visite e controlli preventivi.',
+            'Cardiología':'Cardiologia',
+            'Diagnóstico y seguimiento del corazón.':'Diagnosi e monitoraggio del cuore.',
+            'Pediatría':'Pediatria',
+            'Cuidado integral para los más pequeños.':'Cura completa per i più piccoli.',
+            'Reservé mi cita online y me atendieron puntual. Excelente.':'Ho prenotato online, puntualissimi. Eccellente.',
+            'Los médicos explican todo con paciencia. Recomendados.':'I medici spiegano tutto con pazienza. Consigliati.',
+            'Agenda tu consulta sin llamadas ni esperas.':'Prenota la visita senza chiamate né attese.',
+            'Nuestros médicos':'I nostri medici',
+            'Un equipo de especialistas con años de experiencia y calidez humana.':'Un team di specialisti con anni di esperienza e calore umano.',
+            'Ver planes':'Vedi i piani',
+            'Entrena. Supera. Repite.':'Allena. Supera. Ripeti.',
+            'Máquinas de última generación, clases grupales y coaches certificados. 2 sedes en Lima.':'Macchine di ultima generazione, corsi di gruppo e coach certificati. 2 sedi.',
+            'sedes':'sedi',
+            'abierto':'aperto',
+            'Todo lo que necesitas':'Tutto ciò che ti serve',
+            'Sala equipada':'Sala attrezzata',
+            'Peso libre y máquinas de última generación.':'Pesi liberi e macchine di ultima generazione.',
+            'Clases grupales':'Corsi di gruppo',
+            'Funcional, spinning, yoga y más, incluidas.':'Funzionale, spinning, yoga e altro, inclusi.',
+            'Coaches':'Coach',
+            'Entrenadores certificados que te guían.':'Allenatori certificati che ti guidano.',
+            'Cambié mi rutina y mi cuerpo en 3 meses. El staff motiva.':'Ho cambiato routine e fisico in 3 mesi. Staff motivante.',
+            'Las clases grupales son adictivas. Ambiente top.':'I corsi di gruppo creano dipendenza. Ambiente top.',
+            'Elige tu plan y empieza hoy mismo.':'Scegli il tuo piano e inizia oggi.',
+            'Abierto de lunes a domingo, de 5am a 11pm en ambas sedes.':'Aperto tutti i giorni, dalle 5 alle 23 in entrambe le sedi.',
+            'Buscar propiedades':'Cerca immobili',
+            'Encuentra el lugar donde vivir tu vida':'Trova il posto dove vivere la tua vita',
+            'Casas, departamentos y oficinas en las mejores zonas de Lima. Con simulador de crédito.':'Case, appartamenti e uffici nelle zone migliori. Con simulatore di mutuo.',
+            'inmuebles':'immobili',
+            'distritos':'quartieri',
+            'Por qué Urbana':'Perché Urbana',
+            'Corredores colegiados':'Agenti abilitati',
+            'Asesoría profesional en cada paso.':'Consulenza professionale a ogni passo.',
+            'Simulador de crédito':'Simulatore di mutuo',
+            'Calcula tu cuota antes de decidir.':'Calcola la rata prima di decidere.',
+            'Visitas guiadas':'Visite guidate',
+            'Recorridos presenciales y virtuales.':'Tour di persona e virtuali.',
+            'Compramos nuestro primer depa con su ayuda. Todo claro.':'Abbiamo comprato il primo appartamento con loro. Tutto chiaro.',
+            'El simulador me mostró cuánto podía pagar. Muy útil.':'Il simulatore mi ha mostrato quanto potevo permettermi. Utile.',
+            'Explora las propiedades disponibles ahora.':'Esplora gli immobili disponibili ora.',
+            'Departamentos y oficinas en alquiler en las mejores zonas de Lima.':'Appartamenti e uffici in affitto nelle zone migliori.',
+            'Proyectos en preventa con financiamiento directo.':'Progetti in prevendita con finanziamento diretto.',
+            'Reservar mi cita':'Prenota il mio appuntamento',
+            'Realza tu belleza natural':'Esalta la tua bellezza naturale',
+            'Corte, color, spa y manicure con profesionales top. En el corazón de Barranco.':'Taglio, colore, spa e manicure con professioniste top.',
+            'reseñas':'recensioni',
+            'clientas':'clienti',
+            'Cabello':'Capelli',
+            'Corte, color y tratamientos de autor.':'Taglio, colore e trattamenti d’autore.',
+            'Manos y pies':'Mani e piedi',
+            'Manicure y pedicure spa.':'Manicure e pedicure spa.',
+            'Facial & spa':'Viso & spa',
+            'Rituales de relajación y cuidado de la piel.':'Rituali di relax e cura della pelle.',
+            'Salí feliz con mi color. Las chicas son unas artistas.':'Uscita felice col mio colore. Sono delle artiste.',
+            'El masaje facial es una gloria. Mi lugar favorito.':'Il massaggio viso è una meraviglia. Il mio posto preferito.',
+            'Agenda tu momento de belleza y relax.':'Prenota il tuo momento di bellezza e relax.',
+            'Nuestro equipo':'Il nostro team',
+            'Estilistas y terapeutas con años de experiencia y mucho cariño.':'Stiliste e terapiste con anni di esperienza e tanto affetto.',
             'Inicio':'Home',
             'Reservas':'Prenotazioni',
             'Tienda':'Shop',
@@ -2163,7 +2334,7 @@
                 brand:'Pachamanca & Grill', logo:'🍢', nav:['Inicio','Carta','Reservas','Contacto'],
                 foot:'Av. La Mar 1234, Miraflores · Lima', tel:'(01) 445 6789' },
             ecommerce:     { acc:'#2563eb', steps:['Catálogo','Producto','Carrito','Pago','Listo'],
-                brand:'Inka Boutique', logo:'🧵', nav:['Tienda','Novedades','Ofertas','Contacto'],
+                brand:'Inka Boutique', logo:'🧵', nav:['Inicio','Tienda','Ofertas','Contacto'],
                 foot:'Envíos a todo el Perú · 48h · Cambios gratis', tel:'ventas@inkaboutique.pe' },
             negocios:      { acc:'#059669', steps:['Servicio','Cotizador','Reunión','Listo'],
                 brand:'Andes Logistics', logo:'🚚', nav:['Servicios','Cobertura','Tarifas','Contacto'],
@@ -2175,13 +2346,13 @@
                 brand:'Clínica Vida Andina', logo:'🩺', nav:['Especialidades','Médicos','Citas','Contacto'],
                 foot:'Atención 24/7 · San Isidro, Lima', tel:'(01) 610 5000' },
             fitness:       { acc:'#7c3aed', steps:['Plan','Extras','Datos','Listo'],
-                brand:'Power Andino Gym', logo:'💪', nav:['Planes','Clases','Horarios','Contacto'],
+                brand:'Power Andino Gym', logo:'💪', nav:['Inicio','Planes','Clases','Contacto'],
                 foot:'2 sedes en Lima · Abierto 5am – 11pm', tel:'(01) 733 8080' },
             inmobiliaria:  { acc:'#0284c7', steps:['Buscar','Propiedad','Visita','Listo'],
-                brand:'Urbana Propiedades', logo:'🏙️', nav:['Comprar','Alquilar','Proyectos','Contacto'],
+                brand:'Urbana Propiedades', logo:'🏙️', nav:['Inicio','Comprar','Proyectos','Contacto'],
                 foot:'Corredores colegiados · Lima Metropolitana', tel:'(01) 480 1200' },
             belleza:       { acc:'#db2777', steps:['Servicios','Profesional','Horario','Listo'],
-                brand:'Killa Beauty Spa', logo:'💅', nav:['Servicios','Equipo','Reservas','Contacto'],
+                brand:'Killa Beauty Spa', logo:'💅', nav:['Inicio','Servicios','Reservas','Contacto'],
                 foot:'Barranco, Lima · Martes a domingo', tel:'(01) 247 9090' }
         };
 
@@ -2211,24 +2382,50 @@
         }
 
         /* Header de navegación propio de cada demo (como un sitio real) */
+        /* Sección activa del sitio-demo (Inicio, la sección del flujo, Nosotros...).
+           Cada demo define su menú en DEMOS[key].nav; el índice del flujo transaccional
+           se marca con DEMOS[key].flowIndex. */
+        let demoSection = {};  // { key: indiceDeSeccion }
+
+        function demoNav(key, idx) {
+            demoSection[key] = idx;
+            // Re-renderiza la sección elegida
+            DEMO_SECTION_RENDER[key](idx);
+            // Llevar el scroll arriba salvo que sea el flujo (que maneja su propio scroll)
+            sandboxRender.scrollTop = 0;
+        }
+
         function demoHeader(key) {
             const d = DEMOS[key];
+            const active = demoSection[key] ?? 0;
             const links = d.nav.map((n, i) =>
-                `<span class="dm-nav-link ${i === 0 ? 'on' : ''}">${tr(n)}</span>`).join('');
+                `<span class="dm-nav-link ${i === active ? 'on' : ''}" onclick="demoNav('${key}', ${i})">${tr(n)}</span>`).join('');
+            // Badge de carrito en vivo (solo tiendas con carrito). Lleva al paso de carrito del flujo.
+            let cart = '';
+            if (key === 'ecommerce' && shp.cart.length) {
+                cart = `<button class="dm-cart-badge" onclick="demoNav('ecommerce', 1); shp.step=3; renderEcommerceDemo()" aria-label="${tr('Carrito')}">
+                    🛒 <span class="dm-cart-count">${shp.cart.reduce((a,i)=>a+i.qty,0)}</span></button>`;
+            } else if (key === 'restaurante' && rstCount()) {
+                cart = `<button class="dm-cart-badge" onclick="demoNav('restaurante', 1); rst.step=2; renderRestauranteDemo()" aria-label="${tr('Pedido')}">
+                    🛒 <span class="dm-cart-count">${rstCount()}</span></button>`;
+            }
             return `<div class="dm-header">
-                <div class="dm-header-brand">
+                <div class="dm-header-brand" onclick="demoNav('${key}', 0)" style="cursor:pointer">
                     <span class="dm-header-logo">${d.logo}</span>
                     <span class="dm-header-name">${d.brand}</span>
                 </div>
                 <nav class="dm-nav">${links}</nav>
-                <button class="dm-header-cta">${tr('Contacto')}</button>
+                <div style="display:flex;align-items:center;gap:.5rem">
+                    ${cart}
+                    <button class="dm-header-cta" onclick="demoNav('${key}', ${d.nav.length - 1})">${tr('Contacto')}</button>
+                </div>
             </div>`;
         }
 
         /* Footer propio de cada demo */
         function demoFooter(key) {
             const d = DEMOS[key];
-            const links = d.nav.map(n => `<span class="dm-foot-link">${tr(n)}</span>`).join('');
+            const links = d.nav.map((n, i) => `<span class="dm-foot-link" onclick="demoNav('${key}', ${i})">${tr(n)}</span>`).join('');
             const year = new Date().getFullYear();
             return `<div class="dm-footer">
                 <div class="dm-footer-top">
@@ -2246,6 +2443,28 @@
             </div>`;
         }
 
+        /* Barra de anuncio superior, descartable (como en tiendas reales) */
+        const DEMO_ANNOUNCE = {
+            restaurante:   '🔥 2x1 en pisco sours de lunes a jueves',
+            ecommerce:     '🚚 Envío gratis en compras desde $200 · Cambios gratis 30 días',
+            negocios:      '📦 Cotiza tu envío internacional y recibe 10% en tu primer despacho',
+            profesionales: '📐 Agenda una consulta de diseño sin costo este mes',
+            salud:         '🩺 Chequeo preventivo con 20% de descuento hasta fin de mes',
+            fitness:       '💪 Inscríbete hoy y llévate 1 mes de nutrición gratis',
+            inmobiliaria:  '🏡 Feria inmobiliaria: cuota inicial desde 10% esta semana',
+            belleza:       '💅 Reserva 2 servicios y el tercero va con 30% off'
+        };
+        let announceClosed = {};
+        function demoAnnounce(key) {
+            if (announceClosed[key]) return '';
+            const msg = DEMO_ANNOUNCE[key];
+            if (!msg) return '';
+            return `<div class="dm-announce">
+                <span>${tr(msg)}</span>
+                <button class="dm-announce-x" onclick="announceClosed['${key}']=true; DEMO_SECTION_RENDER['${key}'](demoSection['${key}']??0)" aria-label="${tr('Cerrar')}">×</button>
+            </div>`;
+        }
+
         /* Capa de fondo animada, con el color de acento de cada rubro */
         function demoBackdrop() {
             return `<div class="dm-backdrop" aria-hidden="true">
@@ -2255,20 +2474,89 @@
             </div>`;
         }
 
-        /* Cáscara común: banner + barra de pasos + cuerpo */
-        function dmShell(key, step, body) {
+        /* ====== BLOQUES DE CONTENIDO REUTILIZABLES (dan volumen y vida) ====== */
+        // Hero de sección Inicio con título, subtítulo y CTA que lleva al flujo
+        function secHero(key, title, subtitle, ctaLabel, ctaIdx) {
+            return `<div class="dm-hero">
+                <h2 class="dm-hero-title">${title}</h2>
+                <p class="dm-hero-sub">${subtitle}</p>
+                <button class="dm-btn" style="max-width:260px" onclick="demoNav('${key}', ${ctaIdx})">${ctaLabel}</button>
+            </div>`;
+        }
+        // Fila de estadísticas
+        function secStats(stats) {
+            return `<div class="dm-grid">${stats.map(s =>
+                `<div class="dm-panel" style="text-align:center"><div class="dm-price text-lg">${s[0]}</div><span class="text-xs dm-mut">${s[1]}</span></div>`
+            ).join('')}</div>`;
+        }
+        // Tarjetas de características/beneficios
+        function secFeatures(title, feats) {
+            return `<div><span class="dm-lbl">${title}</span>
+                <div class="dm-grid-l">${feats.map(f =>
+                    `<div class="dm-panel"><div style="font-size:1.6rem">${f[0]}</div>
+                        <h5 class="font-bold text-sm" style="margin-top:.4rem">${f[1]}</h5>
+                        <p class="text-xs dm-mut" style="margin-top:.25rem;line-height:1.5">${f[2]}</p></div>`
+                ).join('')}</div></div>`;
+        }
+        // Testimonios con estrellas
+        function secTestimonials(items) {
+            return `<div><span class="dm-lbl">${tr('Lo que dicen nuestros clientes')}</span>
+                <div class="dm-grid-l">${items.map(t =>
+                    `<div class="dm-panel">
+                        <div style="color:#f5b400;font-size:12px;letter-spacing:1px">★★★★★</div>
+                        <p class="text-xs" style="margin:.5rem 0;line-height:1.6;color:var(--dmtx)">"${t[0]}"</p>
+                        <div class="text-xs dm-mut" style="display:flex;align-items:center;gap:.4rem">
+                            <span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">${t[1][0]}</span>
+                            ${t[1]}</div>
+                    </div>`
+                ).join('')}</div></div>`;
+        }
+        // Sección de contacto genérica (formulario simulado + datos)
+        function secContact(key) {
             const d = DEMOS[key];
-            const steps = d.steps.map((s, i) => {
+            return `<div class="dm-hero" style="padding-bottom:.5rem">
+                    <h2 class="dm-hero-title">${tr('Hablemos')}</h2>
+                    <p class="dm-hero-sub">${tr('Escríbenos y te respondemos el mismo día.')}</p>
+                </div>
+                <div class="dm-2">
+                    <div class="dm-panel" style="display:flex;flex-direction:column;gap:.7rem">
+                        <div><label class="dm-lbl">${tr('Nombre')}</label><input class="dm-in" placeholder="${tr('Tu nombre')}"></div>
+                        <div><label class="dm-lbl">${tr('Correo')}</label><input class="dm-in" placeholder="tu@correo.com"></div>
+                        <div><label class="dm-lbl">${tr('Mensaje')}</label><textarea class="dm-in" rows="3" placeholder="${tr('¿En qué te ayudamos?')}"></textarea></div>
+                        <button class="dm-btn" onclick="showNotification(tr('¡Mensaje enviado! (demo)'))">${tr('Enviar mensaje')}</button>
+                    </div>
+                    <div class="dm-panel" style="display:flex;flex-direction:column;gap:.8rem;justify-content:center">
+                        <div><span class="dm-lbl">${tr('Dirección')}</span><p class="text-xs" style="color:var(--dmtx)">${d.foot}</p></div>
+                        <div><span class="dm-lbl">${tr('Contacto')}</span><p class="text-xs" style="color:var(--dmtx)">📞 ${d.tel}</p></div>
+                        <div><span class="dm-lbl">${tr('Horario')}</span><p class="text-xs" style="color:var(--dmtx)">${tr('Lunes a sábado')} · 9:00 – 19:00</p></div>
+                        <div class="dm-map">🗺️ ${tr('Ver en el mapa')}</div>
+                    </div>
+                </div>`;
+        }
+
+        /* Router de secciones: para cada demo, mapea el índice del nav a un render.
+           El índice del flujo transaccional reinicia y muestra el flujo actual. */
+        const DEMO_SECTION_RENDER = {};
+
+        /* Cáscara común: banner + barra de pasos + cuerpo.
+           opts.hideSteps oculta la barra de pasos (para secciones de contenido).
+           opts.hideBanner oculta el banner (algunas secciones traen su propio hero). */
+        function dmShell(key, step, body, opts) {
+            opts = opts || {};
+            const d = DEMOS[key];
+            const stepsBar = opts.hideSteps ? '' : `<div class="dm-steps">${d.steps.map((s, i) => {
                 const n = i + 1;
                 const cls = n === step ? 'on' : (n < step ? 'done' : '');
                 return `<span class="dm-step ${cls}">${n < step ? '✓' : n} ${tr(s)}</span>`;
-            }).join('');
+            }).join('')}</div>`;
+            const banner = opts.hideBanner ? '' : demoBanner(key);
             sandboxRender.innerHTML = `<div class="dm-demo demo-in" style="--acc:${d.acc}">
                 ${demoBackdrop()}
+                ${demoAnnounce(key)}
                 ${demoHeader(key)}
                 <div class="dm-page">
-                    ${demoBanner(key)}
-                    <div class="dm-steps">${steps}</div>
+                    ${banner}
+                    ${stepsBar}
                     <div class="dm-body">${body}</div>
                 </div>
                 ${demoFooter(key)}
@@ -2458,12 +2746,12 @@
 
         /* ================= 2. E-COMMERCE ================= */
         const shopProducts = [
-            { id:'p1', emoji:'🧣', img:'https://loremflickr.com/300/300/wool,sweater?lock=31', name:'Chompa Premium Alpaca', price:149, tag:'Más vendido' },
-            { id:'p2', emoji:'🧥', img:'https://loremflickr.com/300/300/poncho,wool?lock=32', name:'Poncho Andino Royal', price:189, tag:'Nuevo' },
-            { id:'p3', emoji:'🧶', img:'https://loremflickr.com/300/300/scarf,wool?lock=33', name:'Bufanda Baby Alpaca', price:69, tag:'' },
-            { id:'p4', emoji:'🧤', img:'https://loremflickr.com/300/300/gloves,winter?lock=34', name:'Guantes Cusco Wool', price:39, tag:'' },
-            { id:'p5', emoji:'👜', img:'https://loremflickr.com/300/300/handbag,bag?lock=35', name:'Bolso Tejido Inka', price:119, tag:'Ed. limitada' },
-            { id:'p6', emoji:'🧦', img:'https://loremflickr.com/300/300/socks,wool?lock=36', name:'Medias Térmicas (par)', price:25, tag:'' }
+            { id:'p1', emoji:'🧣', img:'https://loremflickr.com/300/300/wool,sweater?lock=31', name:'Chompa Premium Alpaca', price:149, tag:'Más vendido', stock:4 },
+            { id:'p2', emoji:'🧥', img:'https://loremflickr.com/300/300/poncho,wool?lock=32', name:'Poncho Andino Royal', price:189, tag:'Nuevo', stock:9 },
+            { id:'p3', emoji:'🧶', img:'https://loremflickr.com/300/300/scarf,wool?lock=33', name:'Bufanda Baby Alpaca', price:69, tag:'', stock:15 },
+            { id:'p4', emoji:'🧤', img:'https://loremflickr.com/300/300/gloves,winter?lock=34', name:'Guantes Cusco Wool', price:39, tag:'', stock:2 },
+            { id:'p5', emoji:'👜', img:'https://loremflickr.com/300/300/handbag,bag?lock=35', name:'Bolso Tejido Inka', price:119, tag:'Ed. limitada', stock:3 },
+            { id:'p6', emoji:'🧦', img:'https://loremflickr.com/300/300/socks,wool?lock=36', name:'Medias Térmicas (par)', price:25, tag:'', stock:20 }
         ];
         const shopColors = [['Vicuña','#c19a4f'],['Navy','#1e293b'],['Marfil','#f1ede4']];
         let shp = { step:1, sel:null, color:0, size:'M', qty:1, cart:[], coupon:'', disc:0, pay:'visa' };
@@ -2512,7 +2800,8 @@
                         </div>
                         <h5 class="font-bold text-xs" style="line-height:1.3">${p.name}</h5>
                         <span class="dm-price text-sm">${money(p.price,'$')}</span>
-                        <button class="dm-btn dm-btn-sm" style="width:100%">Ver producto</button>
+                        ${p.stock <= 4 ? `<span class="dm-stock-low">🔥 ${tr('¡Solo quedan')} ${p.stock}!</span>` : ''}
+                        <button class="dm-btn dm-btn-sm" style="width:100%">${tr('Ver producto')}</button>
                     </div>`).join('');
                 dmShell('ecommerce', 1, `
                     <div class="dm-row">
@@ -3262,6 +3551,198 @@
             }
             setTimeout(() => showNotification('Formulario precargado con lo que viste en la demo'), 600);
         }
+
+        /* ====== SECCIONES DE CONTENIDO POR DEMO ====== */
+        // Página "Inicio" genérica que compone hero + stats + features + testimonios
+        function homeSection(key, cfg) {
+            const body = `
+                ${secHero(key, cfg.heroTitle, cfg.heroSub, cfg.cta, cfg.flowIndex)}
+                ${cfg.stats ? secStats(cfg.stats) : ''}
+                ${cfg.features ? secFeatures(cfg.featTitle || tr('Por qué elegirnos'), cfg.features) : ''}
+                ${cfg.testimonials ? secTestimonials(cfg.testimonials) : ''}
+                <div class="dm-cta-band">
+                    <span>${cfg.bandText}</span>
+                    <button class="dm-btn dm-btn-sm" onclick="demoNav('${key}', ${cfg.flowIndex})">${cfg.cta}</button>
+                </div>`;
+            dmShell(key, 1, body, { hideSteps: true });
+        }
+
+        // Configuración de "Inicio" para cada demo
+        const HOME = {
+            restaurante: {
+                flowIndex: 1, cta: 'Ver la carta y reservar',
+                heroTitle: 'Cocina peruana con alma de brasa',
+                heroSub: 'Ingredientes frescos del mercado, recetas de la casa y el mejor pisco sour de Miraflores.',
+                stats: [['+12', 'años'], ['4.9★', 'en Google'], ['+8k', 'comensales']],
+                featTitle: 'La experiencia Pachamanca',
+                features: [['🔥','Cocina a la brasa','Carnes y verduras cocidas bajo tierra, al estilo ancestral.'],
+                           ['🌿','Insumos frescos','Compramos cada mañana en el mercado de Surquillo.'],
+                           ['🍸','Barra de autor','Pisco sours, chilcanos y macerados de la casa.']],
+                testimonials: [['La mejor pachamanca que he probado en Lima. Ambiente increíble.','Rosa M.'],
+                               ['Reservé online en 1 minuto y la mesa estaba lista. Volveré.','Carlos T.']],
+                bandText: '¿Con hambre? Arma tu pedido o reserva tu mesa.'
+            },
+            ecommerce: {
+                flowIndex: 1, cta: 'Ir a la tienda',
+                heroTitle: 'Alpaca peruana, tejida a mano',
+                heroSub: 'Prendas premium de baby alpaca. Envíos a todo el Perú en 48h y cambios gratis.',
+                stats: [['100%', 'baby alpaca'], ['48h', 'envío'], ['+5k', 'clientes']],
+                featTitle: 'Por qué Inka Boutique',
+                features: [['🧵','Hecho a mano','Cada prenda tejida por artesanas cusqueñas.'],
+                           ['🚚','Envío rápido','A todo el Perú en 48h, gratis desde $200.'],
+                           ['♻️','Cambios gratis','30 días para cambios y devoluciones.']],
+                testimonials: [['La chompa es abrigadora y suavísima. Calidad real.','Lucía P.'],
+                               ['Llegó al día siguiente y el empaque es hermoso.','Andrés G.']],
+                bandText: 'Descubre la colección de esta temporada.'
+            },
+            negocios: {
+                flowIndex: 1, cta: 'Cotizar mi envío',
+                heroTitle: 'Tu carga, conectada al mundo',
+                heroSub: 'Logística aérea, marítima y terrestre. Del Perú a cualquier economía del planeta.',
+                stats: [['+99%', 'a tiempo'], ['24/7', 'monitoreo'], ['+40', 'países']],
+                featTitle: 'Nuestros servicios',
+                features: [['✈️','Carga aérea','Entregas urgentes en 3–5 días hábiles.'],
+                           ['🚢','Carga marítima','Grandes volúmenes al mejor costo por kilo.'],
+                           ['📦','Última milla','Distribución nacional puerta a puerta.']],
+                testimonials: [['Manejan nuestra exportación hace 3 años. Impecables.','Import SAC'],
+                               ['El cotizador online nos ahorra horas cada semana.','Textiles Andinos']],
+                bandText: 'Calcula el costo de tu próximo envío en segundos.'
+            },
+            profesionales: {
+                flowIndex: 2, cta: 'Solicitar una propuesta',
+                heroTitle: 'Arquitectura que respira su entorno',
+                heroSub: 'Diseñamos espacios que unen la tradición andina con líneas contemporáneas.',
+                stats: [['+60', 'proyectos'], ['15', 'años'], ['3', 'premios']],
+                featTitle: 'Cómo trabajamos',
+                features: [['✏️','Diseño a medida','Cada proyecto nace de tu terreno y tu historia.'],
+                           ['🌱','Sustentable','Materiales locales y eficiencia energética.'],
+                           ['🏗️','Obra llave en mano','Del boceto a la entrega, un solo equipo.']],
+                testimonials: [['Entendieron exactamente lo que soñábamos para la casa.','Familia Rivas'],
+                               ['Profesionalismo y detalle en cada plano.','Inmobiliaria Sur']],
+                bandText: '¿Tienes un proyecto en mente? Cuéntanoslo.'
+            },
+            salud: {
+                flowIndex: 2, cta: 'Reservar una cita',
+                heroTitle: 'Tu salud, en las mejores manos',
+                heroSub: 'Atención médica de calidad, con especialistas y tecnología de punta. 24/7.',
+                stats: [['24/7', 'atención'], ['+30', 'especialistas'], ['4.9★', 'pacientes']],
+                featTitle: 'Nuestras especialidades',
+                features: [['🩺','Medicina general','Consultas y chequeos preventivos.'],
+                           ['🫀','Cardiología','Diagnóstico y seguimiento del corazón.'],
+                           ['🧸','Pediatría','Cuidado integral para los más pequeños.']],
+                testimonials: [['Reservé mi cita online y me atendieron puntual. Excelente.','María L.'],
+                               ['Los médicos explican todo con paciencia. Recomendados.','Jorge P.']],
+                bandText: 'Agenda tu consulta sin llamadas ni esperas.'
+            },
+            fitness: {
+                flowIndex: 1, cta: 'Ver planes',
+                heroTitle: 'Entrena. Supera. Repite.',
+                heroSub: 'Máquinas de última generación, clases grupales y coaches certificados. 2 sedes en Lima.',
+                stats: [['2', 'sedes'], ['+40', 'clases/sem'], ['5am–11pm', 'abierto']],
+                featTitle: 'Todo lo que necesitas',
+                features: [['🏋️','Sala equipada','Peso libre y máquinas de última generación.'],
+                           ['🧘','Clases grupales','Funcional, spinning, yoga y más, incluidas.'],
+                           ['👟','Coaches','Entrenadores certificados que te guían.']],
+                testimonials: [['Cambié mi rutina y mi cuerpo en 3 meses. El staff motiva.','Diego R.'],
+                               ['Las clases grupales son adictivas. Ambiente top.','Sofía M.']],
+                bandText: 'Elige tu plan y empieza hoy mismo.'
+            },
+            inmobiliaria: {
+                flowIndex: 1, cta: 'Buscar propiedades',
+                heroTitle: 'Encuentra el lugar donde vivir tu vida',
+                heroSub: 'Casas, departamentos y oficinas en las mejores zonas de Lima. Con simulador de crédito.',
+                stats: [['+500', 'inmuebles'], ['12', 'distritos'], ['4.8★', 'clientes']],
+                featTitle: 'Por qué Urbana',
+                features: [['🔑','Corredores colegiados','Asesoría profesional en cada paso.'],
+                           ['🧮','Simulador de crédito','Calcula tu cuota antes de decidir.'],
+                           ['📸','Visitas guiadas','Recorridos presenciales y virtuales.']],
+                testimonials: [['Compramos nuestro primer depa con su ayuda. Todo claro.','Pareja Núñez'],
+                               ['El simulador me mostró cuánto podía pagar. Muy útil.','Ricardo V.']],
+                bandText: 'Explora las propiedades disponibles ahora.'
+            },
+            belleza: {
+                flowIndex: 1, cta: 'Reservar mi cita',
+                heroTitle: 'Realza tu belleza natural',
+                heroSub: 'Corte, color, spa y manicure con profesionales top. En el corazón de Barranco.',
+                stats: [['+15', 'servicios'], ['4.9★', 'reseñas'], ['+6k', 'clientas']],
+                featTitle: 'Nuestros servicios',
+                features: [['💇‍♀️','Cabello','Corte, color y tratamientos de autor.'],
+                           ['💅','Manos y pies','Manicure y pedicure spa.'],
+                           ['🧖‍♀️','Facial & spa','Rituales de relajación y cuidado de la piel.']],
+                testimonials: [['Salí feliz con mi color. Las chicas son unas artistas.','Valeria S.'],
+                               ['El masaje facial es una gloria. Mi lugar favorito.','Camila R.']],
+                bandText: 'Agenda tu momento de belleza y relax.'
+            }
+        };
+
+        // Sección "Nosotros"/contenido secundario genérica
+        function aboutSection(key, cfg) {
+            const body = `
+                <div class="dm-hero"><h2 class="dm-hero-title">${cfg.title}</h2>
+                    <p class="dm-hero-sub">${cfg.text}</p></div>
+                ${cfg.features ? secFeatures(cfg.featTitle, cfg.features) : ''}
+                ${cfg.testimonials ? secTestimonials(cfg.testimonials) : ''}
+                <div class="dm-cta-band"><span>${cfg.bandText}</span>
+                    <button class="dm-btn dm-btn-sm" onclick="demoNav('${key}', ${cfg.flowIndex})">${cfg.cta}</button></div>`;
+            dmShell(key, 1, body, { hideSteps: true });
+        }
+
+        /* Mapeo final: cada índice del nav → qué se renderiza.
+           Los flujos transaccionales reinician su estado al entrar. */
+        DEMO_SECTION_RENDER.restaurante = (i) => {
+            if (i === 0) return homeSection('restaurante', HOME.restaurante);
+            if (i === 1) { rst.step = 1; return renderRestauranteDemo(); }
+            if (i === 2) { rst.step = 3; return renderRestauranteDemo(); }
+            return dmShell('restaurante', 1, secContact('restaurante'), { hideSteps: true, hideBanner: true });
+        };
+        DEMO_SECTION_RENDER.ecommerce = (i) => {
+            if (i === 0) return homeSection('ecommerce', HOME.ecommerce);
+            if (i === 1) { shp.step = 1; return renderEcommerceDemo(); }
+            if (i === 2) return aboutSection('ecommerce', { title:tr('Ofertas'), text:tr('Aprovecha descuentos por tiempo limitado en prendas seleccionadas.'),
+                testimonials:HOME.ecommerce.testimonials, flowIndex:1, cta:HOME.ecommerce.cta, bandText:HOME.ecommerce.bandText });
+            return dmShell('ecommerce', 1, secContact('ecommerce'), { hideSteps: true, hideBanner: true });
+        };
+        DEMO_SECTION_RENDER.negocios = (i) => {
+            if (i === 0) return homeSection('negocios', HOME.negocios);
+            if (i === 1) { ng.step = 1; return renderNegociosDemo(); }
+            if (i === 2) return aboutSection('negocios', { title:tr('Cobertura global'), text:tr('Operamos rutas a más de 40 países en los cinco continentes.'),
+                featTitle:tr('Nuestros servicios'), features:HOME.negocios.features, flowIndex:1, cta:HOME.negocios.cta, bandText:HOME.negocios.bandText });
+            return dmShell('negocios', 1, secContact('negocios'), { hideSteps: true, hideBanner: true });
+        };
+        DEMO_SECTION_RENDER.profesionales = (i) => {
+            if (i === 0) return homeSection('profesionales', HOME.profesionales);
+            if (i === 1) { qo.step = 1; return renderProfesionalesDemo(); }
+            if (i === 2) return aboutSection('profesionales', { title:tr('Servicios'), text:tr('Diseño arquitectónico, interiorismo y obra llave en mano.'),
+                featTitle:tr('Cómo trabajamos'), features:HOME.profesionales.features, flowIndex:1, cta:HOME.profesionales.cta, bandText:HOME.profesionales.bandText });
+            return dmShell('profesionales', 1, secContact('profesionales'), { hideSteps: true, hideBanner: true });
+        };
+        DEMO_SECTION_RENDER.salud = (i) => {
+            if (i === 0) return homeSection('salud', HOME.salud);
+            if (i === 1) return aboutSection('salud', { title:tr('Nuestros médicos'), text:tr('Un equipo de especialistas con años de experiencia y calidez humana.'),
+                featTitle:tr('Nuestras especialidades'), features:HOME.salud.features, flowIndex:2, cta:HOME.salud.cta, bandText:HOME.salud.bandText });
+            if (i === 2) { sal.step = 1; return renderSaludDemo(); }
+            return dmShell('salud', 1, secContact('salud'), { hideSteps: true, hideBanner: true });
+        };
+        DEMO_SECTION_RENDER.fitness = (i) => {
+            if (i === 0) return homeSection('fitness', HOME.fitness);
+            if (i === 1) { fit.step = 1; return renderFitnessDemo(); }
+            if (i === 2) return aboutSection('fitness', { title:tr('Clases grupales'), text:tr('Funcional, spinning, yoga y más, incluidas en tu membresía.'),
+                featTitle:tr('Todo lo que necesitas'), features:HOME.fitness.features, flowIndex:1, cta:HOME.fitness.cta, bandText:HOME.fitness.bandText });
+            return dmShell('fitness', 1, secContact('fitness'), { hideSteps: true, hideBanner: true });
+        };
+        DEMO_SECTION_RENDER.inmobiliaria = (i) => {
+            if (i === 0) return homeSection('inmobiliaria', HOME.inmobiliaria);
+            if (i === 1) { inm.step = 1; return renderInmobiliariaDemo(); }
+            if (i === 2) return aboutSection('inmobiliaria', { title:tr('Proyectos'), text:tr('Proyectos en preventa con financiamiento directo.'),
+                testimonials:HOME.inmobiliaria.testimonials, flowIndex:1, cta:HOME.inmobiliaria.cta, bandText:HOME.inmobiliaria.bandText });
+            return dmShell('inmobiliaria', 1, secContact('inmobiliaria'), { hideSteps: true, hideBanner: true });
+        };
+        DEMO_SECTION_RENDER.belleza = (i) => {
+            if (i === 0) return homeSection('belleza', HOME.belleza);
+            if (i === 1) { spa.step = 1; return renderBellezaDemo(); }
+            if (i === 2) { spa.step = 1; return renderBellezaDemo(); }
+            return dmShell('belleza', 1, secContact('belleza'), { hideSteps: true, hideBanner: true });
+        };
 
         // Cerrar el simulador con la tecla Escape
         document.addEventListener('keydown', (e) => {
